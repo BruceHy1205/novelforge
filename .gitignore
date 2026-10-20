@@ -1,0 +1,23 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+dist/
+build/
+.coverage
+htmlcov/
+.langfuse/
+*.sqlite
+*.db
+projects/*/
+!projects/.gitkeep
+.cursor/
+uploads/
+
+# Runtime factory data at the repo root. The package stays tracked.
+/factory/
+novelforge/web/static/
+web/node_modules/

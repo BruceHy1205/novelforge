@@ -1,0 +1,28 @@
+# 读者问卷模板（P1 校准）
+#
+# 推荐用命令按故事生成，场景和问题会自动填好：
+#   uv run novelforge eval questionnaire <story.yaml> --reader r01 --out responses/r01.yaml
+#
+# 填写规则：
+# - 读完一场填一场，填完不能回头修改，也不能往后翻。
+# - confidence 只能是：none（没头绪）/ hint（隐约觉得）/ suspect（有怀疑对象和依据）/ certain（基本确定）
+# - guess 写你此刻的猜测；没想法就留空或写“不知道”。
+# - skip 写你想跳过的段落编号（从 0 开始，含首尾）；没有就留空。
+# - correct 由整理数据的人填写（true/false），读者本人不填；留空则由判卷程序判断。
+reader_id: r01
+story_id: ""
+responses:
+  - scene_id: sc-01
+    guesses:
+      - probe_id: S-1
+        guess: ""
+        confidence: none
+        correct: null
+    wants_to_know: []
+    skip: []
+    # skip 示例：
+    # skip:
+    #   - scene_id: sc-01
+    #     paragraph_start: 2
+    #     paragraph_end: 4
+    #     reason: 环境描写太长

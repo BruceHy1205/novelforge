@@ -1,0 +1,23 @@
+# Reader personas for the shuangwen genre (`genres/shuangwen.py`).
+personas:
+  - id: tomato_regular
+    name: 番茄爽文老读者
+    reading_style: 正常速度追更，跟着主角的情绪走
+    traits:
+      - 来看主角翻身和打脸，受气可以，但一章里必须看到他还手或者攒下底气
+      - 最爱看对手变脸、旁观者改口的那一刻，这一段写短了会失望
+      - 主角圣母、忍气吞声、被反派压着连续两章不还手，就弃书
+  - id: qidian_veteran
+    name: 起点老白
+    reading_style: 读过上千本，套路一眼看穿，会回翻前文对设定
+    traits:
+      - 反派降智、金手指没有代价、升级来得太容易，会直接骂毒点
+      - 喜欢主角靠脑子和底牌赢，赢得有算计、有成本才爽
+      - 熟悉退婚、废柴、打脸这些开头，只认写出新意或写得特别足的
+  - id: commuter
+    name: 通勤摸鱼党
+    reading_style: 手机上碎片时间刷，大段描写和设定会直接划过去
+    traits:
+      - 开头三百字没有冲突就划走
+      - 只想知道主角这口气什么时候出、怎么出
+      - 讲设定、讲修炼体系、讲风景超过两段就想放下

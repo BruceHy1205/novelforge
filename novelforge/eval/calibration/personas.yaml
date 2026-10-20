@@ -1,0 +1,24 @@
+# Default reader personas for P1 calibration. Add or edit freely;
+# `novelforge eval calibrate --personas <file>` loads a custom set.
+personas:
+  - id: mystery_fan
+    name: 推理迷
+    reading_style: 逐字细读，会回翻前文核对细节
+    traits:
+      - 读过大量本格和社会派推理，熟悉常见诡计
+      - 主动给每个可疑人物列动机和不在场证明
+      - 喜欢和作者斗智，会对刻意的描写保持警惕
+  - id: casual
+    name: 普通读者
+    reading_style: 正常速度阅读，跟着情节和人物走
+    traits:
+      - 偶尔读悬疑，不会刻意推理
+      - 对人物关系和情绪更敏感，对线索细节不太留意
+      - 作者明显强调的东西会记住，一笔带过的细节容易忘
+  - id: impatient
+    name: 没耐心的读者
+    reading_style: 快速浏览，大段描写和对话会扫读
+    traits:
+      - 只想知道接下来发生什么
+      - 环境描写、内心独白、重复信息会直接跳过
+      - 情节停滞超过一两段就想放下

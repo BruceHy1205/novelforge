@@ -1,0 +1,43 @@
+# 原创校准短篇。不是已发表作品。
+id: last-bus
+title: 末班车
+source: NovelForge 原创校准稿
+renamed: false
+ai_generated: true
+scenes:
+  - scene_id: sc-01
+    text: |
+      末班车进站时，司机说少了一个人。
+      最后上车的是个穿灰外套的乘客，中途就不见了。
+      车厢里还坐着四个乘客，谁也不说话。
+      车门开了又关，站台上只有风。
+  - scene_id: sc-02
+    text: |
+      第三排座位底下有一只没拿走的手提包。
+      包里是一张失物招领单，名字写着韩青。
+      同车一个女人认识这个名字。她说韩青是同事，今晚加班，不会在这趟车上。
+      女人自己穿着深色外套，领口有一截灰布。
+  - scene_id: sc-03
+    text: |
+      女人的鞋上有新鲜的泥，和站外工地的泥一样。
+      她说自己从上车起就坐在第三排，没有下去过。
+      第三排的票根不在她手里，而在那只手提包里。
+      车顶的灯一闪一闪，没人去修。
+  - scene_id: sc-04
+    text: |
+      女人就是韩青。灰外套是她的。
+      她中途下车，把包留在车上，想让人以为韩青已经离开这座城市。
+      招领单是她自己的。
+secrets:
+  - id: S-1
+    probe_question: 消失的乘客是谁？
+    truth: 消失的穿灰外套的乘客就是同车那个女人，她的名字是韩青。
+    answer_keywords: [韩青]
+    ask_from: sc-02
+    revealed_in: sc-04
+  - id: S-2
+    probe_question: 手提包是谁留下的？
+    truth: 手提包是韩青自己留下的，用来制造她已经离开的假象。
+    answer_keywords: [韩青]
+    ask_from: sc-02
+    revealed_in: sc-04

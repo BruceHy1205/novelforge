@@ -1,0 +1,43 @@
+# 原创校准短篇。不是已发表作品。
+id: night-pharmacy
+title: 夜班药房
+source: NovelForge 原创校准稿
+renamed: false
+ai_generated: true
+scenes:
+  - scene_id: sc-01
+    text: |
+      药店打烊以后，里面的灯还亮着。
+      学徒阿秀说，药剂师沈先生今晚提早走了。
+      柜台上一盒降压药的封条是新撕开的。
+      街道上没有人，只有卷帘门缝里漏出一条光。
+  - scene_id: sc-02
+    text: |
+      第二天清晨，沈先生倒在库房，杯子还握在手里。
+      那盒降压药少了两粒。
+      店里的监控在十一点停了。阿秀说是停电。
+      杯子底上有一层化不开的白渣。
+  - scene_id: sc-03
+    text: |
+      电工说，那一带整晚都有电。
+      阿秀围裙的口袋里有一粒同样的药。
+      她说是沈先生让她拿去送给老主顾。
+      库房的灯绳是新换的，结打得很紧。
+  - scene_id: sc-04
+    text: |
+      阿秀承认了。沈先生发现她用过期药换货。
+      争执时她把两粒药碾进他的杯子。
+      监控是她关上的。
+secrets:
+  - id: S-1
+    probe_question: 沈先生出了什么事，和谁有关？
+    truth: 学徒阿秀把两粒药碾进沈先生的杯子，导致他倒在库房。
+    answer_keywords: [阿秀]
+    ask_from: sc-02
+    revealed_in: sc-04
+  - id: S-2
+    probe_question: 监控为什么停了？
+    truth: 阿秀自己关上了监控。
+    answer_keywords: [阿秀]
+    ask_from: sc-02
+    revealed_in: sc-04

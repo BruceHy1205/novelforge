@@ -1,0 +1,42 @@
+# 示例故事：为演示格式和跑通流程而写的极短合成文本，不是真实校准数据。
+id: example-lighthouse
+title: 灯塔守夜
+source: NovelForge 示例（合成）
+renamed: false
+ai_generated: true
+scenes:
+  - scene_id: sc-01
+    text: |
+      暴雨把渡口封了三天。旅馆里只剩五个客人。
+      老板娘说，灯塔守林伯昨夜没有点灯。
+      码头的木板湿得发黑，海面上什么也看不见。
+      账房先生一直在擦同一只茶杯。
+  - scene_id: sc-02
+    text: |
+      清晨，有人在礁石下发现了林伯。
+      他的怀表停在十一点二十分，表盖内侧刻着一个“周”字。
+      账房先生姓周。他说自己整夜都在柜台对账。
+      雨还在下，屋檐的水声一刻不停，像有人在数数。
+  - scene_id: sc-03
+    text: |
+      老板娘翻出账本，十一点那一页的墨迹比别处淡。
+      周先生说那是灯油不够，看不清。
+      可旅馆的灯，那晚一直是亮的。
+      窗外的海浪一阵接一阵，拍在防波堤上，又退回去。
+  - scene_id: sc-04
+    text: |
+      周先生终于开口：怀表是他送给林伯的，二十年前，他们是兄弟。
+      那晚他去灯塔，是为了劝林伯离开。
+      争执中林伯失足，他没有呼救。
+secrets:
+  - id: S-1
+    probe_question: 林伯的死和谁有关？
+    truth: 账房周先生当晚去过灯塔，林伯在争执中失足坠亡。
+    answer_keywords: [周]
+    revealed_in: sc-04
+  - id: S-2
+    probe_question: 林伯和周先生是什么关系？
+    truth: 两人是兄弟。
+    answer_keywords: [兄弟]
+    ask_from: sc-02 # 周先生在 sc-02 才出场；提前问会自己泄露“两人有关”
+    revealed_in: sc-04

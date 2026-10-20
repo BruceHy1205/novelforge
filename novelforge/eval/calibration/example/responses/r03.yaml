@@ -1,0 +1,23 @@
+# 合成示例问卷，非真实读者。
+reader_id: r03
+story_id: example-lighthouse
+responses:
+  - scene_id: sc-01
+    guesses:
+      - {probe_id: S-1, guess: "", confidence: none}
+    wants_to_know: []
+    skip:
+      - {scene_id: sc-01, paragraph_start: 2, paragraph_end: 2, reason: 景色}
+  - scene_id: sc-02
+    guesses:
+      - {probe_id: S-1, guess: 老板娘, confidence: hint}
+      - {probe_id: S-2, guess: "", confidence: none}
+    wants_to_know: [谁最后见过林伯]
+    skip:
+      - {scene_id: sc-02, paragraph_start: 3, paragraph_end: 3, reason: ""}
+  - scene_id: sc-03
+    guesses:
+      - {probe_id: S-1, guess: 周先生, confidence: suspect}
+      - {probe_id: S-2, guess: 不知道, confidence: none}
+    wants_to_know: [周先生会不会认罪]
+    skip: []

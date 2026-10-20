@@ -1,0 +1,41 @@
+# 原创校准短篇。不是已发表作品。
+id: old-album
+title: 旧相册
+source: NovelForge 原创校准稿
+renamed: false
+ai_generated: true
+scenes:
+  - scene_id: sc-01
+    text: |
+      搬家时翻出一本相册。全家福上，母亲怀里的婴儿没有了脸。
+      父亲说是受潮，纸自己裂的。
+      裂口很齐，不像水泡过。
+      箱子底层还有一截红绳，和相册封皮上的绳是同一根。
+  - scene_id: sc-02
+    text: |
+      表妹来收东西，看见那张照片就走了。
+      相册夹层里有一封没寄出的信，抬头写着表妹的名字。
+      信纸被撕去一半，只剩“孩子不能留在这个家”。
+      父亲把信按回夹层，手在抖。
+  - scene_id: sc-03
+    text: |
+      父亲说那是母亲的字，写于表妹出生那年。
+      表妹整夜没有接电话。
+      邻居记得，那年家里忽然多了一个婴儿，对外说是父亲的小女儿。
+      风从破窗里进来，相册一页页自己翻过去。
+  - scene_id: sc-04
+    text: |
+      表妹回来了。孩子是她的。
+      母亲要把孩子送走，她撕了那张全家福。
+      对外，这个孩子被说成她的妹妹。
+secrets:
+  - id: S-1
+    probe_question: 全家福是谁撕的？
+    truth: 表妹撕掉了全家福上婴儿的脸。
+    answer_keywords: [表妹]
+    revealed_in: sc-04
+  - id: S-2
+    probe_question: 照片里的婴儿是谁的孩子？
+    truth: 婴儿是表妹的孩子，对外被说成她的妹妹。
+    answer_keywords: [表妹]
+    revealed_in: sc-04

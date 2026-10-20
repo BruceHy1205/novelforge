@@ -1,0 +1,194 @@
+:root {
+  --ink: #241c16;
+  --ink-soft: #5c534a;
+  --paper: #f3eee4;
+  --card: #fffdf8;
+  --cinnabar: #c4513a;
+  --moss: #3d6b58;
+  --gold: #c4893a;
+  --line: rgba(36, 28, 22, 0.08);
+
+  --el-color-primary: #c4513a;
+  --el-color-primary-light-3: #d47864;
+  --el-color-primary-light-5: #e3a99c;
+  --el-color-primary-light-7: #f0d4cc;
+  --el-color-primary-light-8: #f6e4de;
+  --el-color-primary-light-9: #fbf4f1;
+  --el-color-primary-dark-2: #9c3d2c;
+  --el-color-success: #3d6b58;
+  --el-color-warning: #c4893a;
+  --el-color-danger: #b42318;
+  --el-color-info: #7a7168;
+  --el-bg-color: #fffdf8;
+  --el-bg-color-overlay: #fffdf8;
+  --el-fill-color-blank: #fffdf8;
+  --el-text-color-primary: #241c16;
+  --el-text-color-regular: #3d342c;
+  --el-text-color-secondary: #7a7168;
+  --el-text-color-placeholder: #a3988c;
+  --el-border-color: rgba(36, 28, 22, 0.1);
+  --el-border-color-light: rgba(36, 28, 22, 0.06);
+  --el-border-color-lighter: rgba(36, 28, 22, 0.04);
+  --el-border-radius-base: 12px;
+  --el-border-radius-small: 8px;
+  --el-border-radius-round: 999px;
+  --el-font-family: 'WenQuanYi Micro Hei', 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei',
+    sans-serif;
+  --el-mask-color: rgba(36, 28, 22, 0.45);
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--el-font-family);
+  color: var(--ink);
+  background:
+    radial-gradient(900px 420px at 0% 0%, rgba(196, 81, 58, 0.09), transparent 55%),
+    radial-gradient(700px 380px at 100% 0%, rgba(196, 165, 116, 0.28), transparent 50%),
+    var(--paper);
+}
+
+.page-title {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.page-title h2 {
+  margin: 0;
+  font-family: Fraunces, 'Songti SC', 'Noto Serif SC', 'Source Han Serif SC', Palatino, serif;
+  font-size: 30px;
+  font-weight: 560;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+}
+
+.page-title + p,
+.lede {
+  margin: -8px 0 18px;
+  max-width: 640px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.muted {
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.chapter-text {
+  white-space: pre-wrap;
+  line-height: 2;
+  font-size: 16px;
+  max-width: 680px;
+  margin: 0;
+  padding: 28px 32px 36px;
+  background: #fffdf8;
+  border-radius: 18px;
+  box-shadow: 0 16px 40px rgba(48, 32, 16, 0.06);
+  font-family: 'Songti SC', 'Noto Serif SC', 'Source Han Serif SC', Palatino, 'WenQuanYi Micro Hei',
+    serif;
+}
+
+.el-card {
+  --el-card-border-color: transparent;
+  border: none;
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 14px 36px rgba(48, 32, 16, 0.06);
+}
+
+.el-card__header {
+  border-bottom: 1px solid var(--line);
+  font-family: Fraunces, 'Songti SC', Palatino, serif;
+  font-size: 18px;
+  padding: 16px 20px;
+}
+
+.el-card__body {
+  padding: 18px 20px 20px;
+}
+
+.el-table {
+  --el-table-border-color: transparent;
+  --el-table-header-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-row-hover-bg-color: rgba(196, 81, 58, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--card);
+  box-shadow: 0 14px 36px rgba(48, 32, 16, 0.06);
+}
+
+.el-table th.el-table__cell {
+  font-weight: 560;
+  color: var(--ink-soft);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+.el-table--border .el-table__cell,
+.el-table td.el-table__cell,
+.el-table th.el-table__cell.is-leaf {
+  border-right: none;
+}
+
+.el-table--border::before,
+.el-table--border::after,
+.el-table__inner-wrapper::before {
+  display: none;
+}
+
+.el-button {
+  border-radius: 999px;
+  font-weight: 560;
+}
+
+.el-button--primary {
+  --el-button-hover-bg-color: #d4654e;
+  --el-button-hover-border-color: #d4654e;
+}
+
+.el-dialog {
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.el-drawer {
+  --el-drawer-bg-color: #f7f2ea;
+}
+
+.el-drawer__body {
+  background:
+    radial-gradient(500px 180px at 100% 0%, rgba(196, 165, 116, 0.2), transparent 60%),
+    #f7f2ea;
+}
+
+.el-alert {
+  border: none;
+  border-radius: 16px;
+}
+
+.el-tag {
+  border: none;
+}
+
+.el-timeline-item__timestamp {
+  color: #a3988c;
+}
