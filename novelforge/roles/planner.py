@@ -76,17 +76,22 @@ def plan_scenes(
     scenes: int = 8,
     genre: Genre | None = None,
     repair: str = "",
+    scenes_per_batch: int = PLAN_BATCH,
 ) -> list[SceneCard]:
     """Plan in batches so a thinking model's reasoning does not hit the output cap.
 
-    `repair` is a rejection from the genre's card audit. It goes into every batch.
+    `scenes_per_batch` is how many cards one planner call writes. The default
+    (`PLAN_BATCH`) is 3. `repair` is a rejection from the genre's card audit
+    and goes into every batch.
     """
 
+    if scenes_per_batch < 1:
+        raise ValueError("scenes_per_batch must be at least 1")
     rules = resolve(genre)
     planned: list[SceneCard] = []
     while len(planned) < scenes:
         first = len(planned) + 1
-        last = min(scenes, len(planned) + PLAN_BATCH)
+        last = min(scenes, len(planned) + scenes_per_batch)
         user = canon.model_dump_json()
         if planned:
             earlier = SceneDeck(scenes=planned).model_dump_json()

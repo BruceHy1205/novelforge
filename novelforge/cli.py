@@ -16,6 +16,7 @@ from novelforge.pipeline import rollback, run_baseline, run_plan, run_write
 from novelforge.project import create_project
 from novelforge.roles.guess_judge import KeywordJudge, LLMGuessJudge
 from novelforge.roles.memory import format_gate_report
+from novelforge.roles.planner import PLAN_BATCH
 
 app = typer.Typer(
     name="novelforge",
@@ -151,6 +152,14 @@ def plan(
         str | None,
         typer.Option("--genre", help="Rule set; saved to project.yaml (default: the saved one)"),
     ] = None,
+    scenes_per_batch: Annotated[
+        int,
+        typer.Option(
+            "--scenes-per-batch",
+            min=1,
+            help="Scene cards written by each planner call",
+        ),
+    ] = PLAN_BATCH,
 ) -> None:
     """Write canon.yaml and scenes/sc-*.yaml from an idea."""
 
@@ -168,6 +177,7 @@ def plan(
             scenes=scenes,
             keep_canon=keep_canon,
             genre=genre,
+            scenes_per_batch=scenes_per_batch,
         )
     except PlanRejected as exc:
         typer.echo(str(exc), err=True)

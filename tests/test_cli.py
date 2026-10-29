@@ -68,6 +68,37 @@ def test_plan_fake_shuangwen_refuses_an_empty_canon(tmp_path: Path) -> None:
     assert not list((directory / "scenes").glob("sc-*.yaml"))
 
 
+def test_plan_help_shows_scenes_per_batch() -> None:
+    result = runner.invoke(app, ["plan", "--help"])
+    assert result.exit_code == 0
+    assert "--scenes-per-batch" in result.stdout
+    assert "default: 3" in result.stdout
+    rejected = runner.invoke(
+        app,
+        ["plan", "demo", "雨", "--scenes-per-batch", "0", "--fake"],
+    )
+    assert rejected.exit_code != 0
+
+
+def test_plan_forwards_scenes_per_batch(tmp_path: Path, monkeypatch) -> None:
+    seen: dict[str, int] = {}
+
+    def fake_run_plan(*_args, **kwargs):
+        seen["scenes_per_batch"] = kwargs["scenes_per_batch"]
+        return tmp_path
+
+    monkeypatch.setattr("novelforge.cli.run_plan", fake_run_plan)
+    omitted = runner.invoke(app, ["plan", "demo", "雨", "--path", str(tmp_path), "--fake"])
+    assert omitted.exit_code == 0
+    assert seen["scenes_per_batch"] == 3
+    explicit = runner.invoke(
+        app,
+        ["plan", "demo", "雨", "--path", str(tmp_path), "--fake", "--scenes-per-batch", "1"],
+    )
+    assert explicit.exit_code == 0
+    assert seen["scenes_per_batch"] == 1
+
+
 def test_doctor_offline() -> None:
     result = runner.invoke(app, ["doctor"])
     assert result.exit_code == 0

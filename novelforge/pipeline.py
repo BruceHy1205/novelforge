@@ -31,7 +31,7 @@ from novelforge.roles.memory import (
     scrub_hidden,
     tally_gates,
 )
-from novelforge.roles.planner import plan_scenes, replan_scene, scrub_secret_text
+from novelforge.roles.planner import PLAN_BATCH, plan_scenes, replan_scene, scrub_secret_text
 from novelforge.roles.prose import SceneDeck
 from novelforge.roles.reader_sim import probes_from_canon, simulate_reader
 from novelforge.roles.reviser import revise_scene, revision_indexes
@@ -338,13 +338,21 @@ def prepare_cards(
     *,
     scenes: int,
     genre: Genre | None = None,
+    scenes_per_batch: int = PLAN_BATCH,
 ) -> list[SceneCard]:
     rules = resolve(genre)
 
     def finish(repair: str = "") -> list[SceneCard]:
         cards = [
             screen_directives(card, canon, personas, client, judge)
-            for card in plan_scenes(canon, client, scenes=scenes, genre=rules, repair=repair)
+            for card in plan_scenes(
+                canon,
+                client,
+                scenes=scenes,
+                genre=rules,
+                repair=repair,
+                scenes_per_batch=scenes_per_batch,
+            )
         ]
         return scrub_secret_text(cards, canon)
 
@@ -384,11 +392,13 @@ def run_plan(
     personas: list[Persona] | None = None,
     keep_canon: bool = False,
     genre: str | None = None,
+    scenes_per_batch: int = PLAN_BATCH,
 ) -> Path:
     """Draft Canon, then scene cards. `keep_canon` reuses a saved Canon that has secrets.
 
     `genre` picks the rule set and is saved to project.yaml; without it the
-    project's saved genre (or mystery) is used.
+    project's saved genre (or mystery) is used. `scenes_per_batch` is how many
+    cards each planner call writes (default 3).
     """
 
     directory = project_dir(name, root)
@@ -413,7 +423,9 @@ def run_plan(
     if canon != saved:
         canon = screen_core(canon, people, client, judge)
         save_canon(directory, canon)
-    cards = prepare_cards(canon, client, judge, people, scenes=scenes, genre=rules)
+    cards = prepare_cards(
+        canon, client, judge, people, scenes=scenes, genre=rules, scenes_per_batch=scenes_per_batch
+    )
     save_cards(directory, cards)
     book = BookState(canon=canon, clues=build_clues(cards, canon), pov_states=cast_pov(canon))
     book = note_review(book, "canon")
