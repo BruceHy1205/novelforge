@@ -141,3 +141,15 @@ uv run pytest
 uv run ruff check . && uv run ruff format --check .
 uv run novelforge init demo
 ```
+
+## Cursor Cloud specific instructions
+
+- `uv sync --frozen` installs the Python 3.12 environment from `uv.lock`.
+  `npm ci --prefix web` and `npm run build --prefix web` write the batch
+  console to `novelforge/web/static`, which is gitignored.
+- Boot starts `uv run novelforge serve --host 0.0.0.0 --port 8765`. The
+  console stays paused until production is started. Rehearsal mode
+  (`dry_run` in settings) walks outline and trial review without
+  `ark_plan_api_key`.
+- If something is already listening on port 8765, the boot script leaves it
+  running.
