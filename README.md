@@ -58,7 +58,7 @@ uv run novelforge serve                   # 默认 http://127.0.0.1:8765 ，状�
 | 悬疑推理 | `mystery` | 藏真相、埋线索、读者猜 | 原有规则，提示词逐字不变 |
 | 爽文 | `shuangwen` | 先压后放：受气、蓄力、当众打脸、拿到收获、换更大的舞台 | 秘密可以没有（金手指不是秘密，读者第一章就知道，只是对手不知道）；人物是主角加分层反派（`antagonist`），反派不许降智；场景卡多三条专属节拍 `face_slap` / `gain` / `reaction`；多一道提示级闸门 `payoff`（小模型只读正文和公开卡片，判断爽点有没有落地，指出哪段一句话带过、靠旁白吹、圣母或憋屈太久）；张力曲线是一波一波的（蓄力、爆发、喘口气、更大的爆发），篇幅 2000–2600 字；金手指要有来历：奇遇所赠，或捡到的残方，开局满级少用；读者第一章看懂用法和边界，来历可以后揭；每次变强对得上一次奇遇或一张残方，爽点是主角的计谋在用这挂，挂不自己升级。架构审稿查这些，也查爽点是不是主角挣来的；读者画像换成番茄爽文老读者、起点老白、通勤摸鱼党 |
 
-`--path` 指定工作区根目录。`--scenes` 默认 8。一场就是一章网文。`pace` 四档的篇幅预算是 slack 2800、steady 2600、tight 2400、sprint 2200 个汉字，写手提示会跟着档位换节奏。张力曲线从 0.66 起步。跳读达到 15% 会把这一场收紧一档再改。连续两场张力偏低，下一场改成 sprint；连续偏高，下一场改成 slack。
+`--path` 指定工作区根目录。`--scenes` 默认 8。`--scenes-per-batch` 默认 3，是每次规划调用写几张场景卡；思考模型输出顶满时可以改成 1。一场就是一章网文。`pace` 四档的篇幅预算是 slack 2800、steady 2600、tight 2400、sprint 2200 个汉字，写手提示会跟着档位换节奏。张力曲线从 0.66 起步。跳读达到 15% 会把这一场收紧一档再改。连续两场张力偏低，下一场改成 sprint；连续偏高，下一场改成 slack。
 
 闸门分两级。拦截级（G1 字面泄底、G2 视角越界、指令泄底、G5 推断泄底、G6 揭示越权）不过时，同一场最多修订 2 轮，然后重规划 1 次，仍不过就停在该场并报错。G5 允许读者比计划早一档起疑，但揭示前不允许“确定”。提示级（G3 篇幅、节奏形状、G4 文风、G7 暗示、G8 张力、G9 跳读、G10 钩子、G11 追读）不过时只触发 1 轮修订，之后带着记录锁定，结果仍计入 `novelforge gates`。
 
@@ -75,7 +75,7 @@ uv run novelforge eval calibrate $D/story.yaml --responses $D/responses --fake -
 
 | 角色 | 默认模型 |
 | --- | --- |
-| architect、planner、critic | `kimi-k2.8-preview`（思考模型，推理开启，输出上限 65536；规划器每次写三章） |
+| architect、planner、critic | `kimi-k2.8-preview`（思考模型，推理开启，输出上限 65536；规划器默认每次写三章，可用 `--scenes-per-batch` 调整） |
 | writer、reader_sim、reviser、gate | `deepseek-v4.1-flash`（关闭推理） |
 
 `models.yaml` 可以按角色改模型，`models` 段可以按模型覆盖 `timeout`、`max_tokens`、`disable_thinking`，也可以在 `provider` 里换成其他 OpenAI 兼容接口。结构化输出默认用 Instructor 的 JSON 模式，因为 `kimi-k3` 不接受工具调用模式。设置 `LANGFUSE_PUBLIC_KEY` 和 `LANGFUSE_SECRET_KEY` 后，每次模型调用会记录到 Langfuse；不设置则静默跳过。
