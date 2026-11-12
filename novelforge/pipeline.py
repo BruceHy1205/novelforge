@@ -393,9 +393,12 @@ def run_plan(
     keep_canon: bool = False,
     genre: str | None = None,
     scenes_per_batch: int = PLAN_BATCH,
+    freeze_canon: bool = False,
 ) -> Path:
     """Draft Canon, then scene cards. `keep_canon` reuses a saved Canon that has secrets.
 
+    `freeze_canon` (with `keep_canon`) keeps that file byte for byte: no architect,
+    no core fill, no theme screen. The planner still writes the cards.
     `genre` picks the rule set and is saved to project.yaml; without it the
     project's saved genre (or mystery) is used. `scenes_per_batch` is how many
     cards each planner call writes (default 3).
@@ -411,22 +414,28 @@ def run_plan(
         save_genre_id(directory, rules.id)
     people = personas if personas is not None else default_personas(rules)
     saved = load_canon(directory) if keep_canon and (directory / "canon.yaml").is_file() else None
-    if saved is not None and (saved.secrets or not rules.requires_secrets):
+    frozen = bool(freeze_canon and saved is not None)
+    if saved is not None and (frozen or saved.secrets or not rules.requires_secrets):
         canon = saved
     else:
         canon = draft_canon(idea, client, scenes=scenes, personas=people, genre=rules)
         save_canon(directory, canon)
-    if not canon.story.core and not canon.story.themes:
-        canon = draft_core(canon, client, scenes=scenes, genre=rules)
-    elif rules.require_story and (not canon.story.core or not canon.story.approach.engine):
-        canon = fill_missing_story(canon, client, scenes=scenes)
-    if canon != saved:
-        canon = screen_core(canon, people, client, judge)
-        save_canon(directory, canon)
+    if not frozen:
+        if not canon.story.core and not canon.story.themes:
+            canon = draft_core(canon, client, scenes=scenes, genre=rules)
+        elif rules.require_story and (not canon.story.core or not canon.story.approach.engine):
+            canon = fill_missing_story(canon, client, scenes=scenes)
+        if canon != saved:
+            canon = screen_core(canon, people, client, judge)
+            save_canon(directory, canon)
     cards = prepare_cards(
         canon, client, judge, people, scenes=scenes, genre=rules, scenes_per_batch=scenes_per_batch
     )
     save_cards(directory, cards)
+    keep_names = {f"{card.scene_id}.yaml" for card in cards}
+    for path in list((directory / "scenes").glob("sc-*.yaml")):
+        if path.name not in keep_names:
+            path.unlink()
     book = BookState(canon=canon, clues=build_clues(cards, canon), pov_states=cast_pov(canon))
     book = note_review(book, "canon")
     save_book(directory, book)

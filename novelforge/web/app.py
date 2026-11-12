@@ -15,6 +15,7 @@ from pydantic import BaseModel, Field, ValidationError
 from novelforge.factory import views
 from novelforge.factory.service import Factory, FactoryError
 from novelforge.genres import DEFAULT_GENRE, genre_ids, get_genre
+from novelforge.web.creative import router as creative_router
 
 STATIC = Path(__file__).with_name("static")
 
@@ -109,12 +110,7 @@ def create_app(factory: Factory, *, serve: bool = True) -> FastAPI:
     @app.get("/api/books/{book_id}")
     def book(book_id: int) -> dict[str, Any]:
         found = guard(factory.book, book_id)
-        return {
-            **found.model_dump(),
-            **views.outline(factory.root, found.slug),
-            "texts": views.chapters(factory.root, found.slug),
-            "events": [event.model_dump() for event in factory.events(book_id, limit=200)],
-        }
+        return views.book_payload(factory.root, found, factory.events(book_id, limit=200))
 
     @app.get("/api/books/{book_id}/manuscript", response_class=PlainTextResponse)
     def manuscript(book_id: int) -> PlainTextResponse:
@@ -163,6 +159,8 @@ def create_app(factory: Factory, *, serve: bool = True) -> FastAPI:
     @app.get("/api/events")
     def events(limit: int = 100) -> list[dict[str, Any]]:
         return [event.model_dump() for event in factory.events(limit=limit)]
+
+    app.include_router(creative_router)
 
     if (STATIC / "index.html").is_file():
         app.mount("/", StaticFiles(directory=STATIC, html=True), name="web")

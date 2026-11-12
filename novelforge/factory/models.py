@@ -93,6 +93,42 @@ class Book(SQLModel, table=True):
     created_at: datetime = Field(default_factory=now)
     updated_at: datetime = Field(default_factory=now)
     trashed_at: datetime | None = None
+    # Creative intake. Topic books keep the defaults and still get a fresh outline.
+    external_id: str | None = Field(default=None, unique=True)
+    mode: str = "plan_from_idea"
+    keep_canon: bool = False
+    keep_outline: bool = False
+    enqueued: bool = True
+    trial_chapters: int | None = None
+    stop_at: int | None = None
+
+
+def upgrade(engine: object) -> None:
+    """Create tables, then add creative-intake columns on a factory database from before them."""
+
+    from sqlalchemy import inspect, text
+
+    SQLModel.metadata.create_all(engine)  # type: ignore[arg-type]
+    inspector = inspect(engine)  # type: ignore[arg-type]
+    if not inspector.has_table("book"):
+        return
+    have = {column["name"] for column in inspector.get_columns("book")}
+    columns = {
+        "external_id": "VARCHAR",
+        "mode": "VARCHAR NOT NULL DEFAULT 'plan_from_idea'",
+        "keep_canon": "BOOLEAN NOT NULL DEFAULT 0",
+        "keep_outline": "BOOLEAN NOT NULL DEFAULT 0",
+        "enqueued": "BOOLEAN NOT NULL DEFAULT 1",
+        "trial_chapters": "INTEGER",
+        "stop_at": "INTEGER",
+    }
+    with engine.begin() as conn:  # type: ignore[attr-defined]
+        for name, ddl in columns.items():
+            if name not in have:
+                conn.execute(text(f"ALTER TABLE book ADD COLUMN {name} {ddl}"))
+        conn.execute(
+            text("CREATE UNIQUE INDEX IF NOT EXISTS uq_book_external_id ON book (external_id)")
+        )
 
 
 class Event(SQLModel, table=True):
