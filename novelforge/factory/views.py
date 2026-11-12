@@ -46,3 +46,37 @@ def manuscript(root: Path, slug: str, title: str) -> str:
     if book is None:
         return f"# {title}\n"
     return manuscript_from_locked(list(book.locked_scenes), book.canon.title or title)
+
+
+def book_payload(root: Path, book: Any, events: list[Any]) -> dict[str, Any]:
+    """Console book detail: row, canon, cards, locked chapters, and the event log."""
+
+    return {
+        **book.model_dump(),
+        **outline(root, book.slug),
+        "texts": chapters(root, book.slug),
+        "events": [event.model_dump() for event in events],
+    }
+
+
+def artifacts(root: Path, slug: str) -> dict[str, Any]:
+    """Paths under the factory root. Missing files are null, not invented."""
+
+    directory = project_dir(slug, root)
+
+    def rel(path: Path) -> str:
+        return path.relative_to(root).as_posix()
+
+    def maybe(path: Path) -> str | None:
+        return rel(path) if path.is_file() else None
+
+    cards_dir = directory / "scenes"
+    card_paths = sorted(cards_dir.glob("sc-*.yaml")) if cards_dir.is_dir() else []
+    return {
+        "root": rel(directory) if directory.exists() else None,
+        "canon": maybe(directory / "canon.yaml"),
+        "cards": [rel(path) for path in card_paths],
+        "manuscript": maybe(directory / "manuscript" / "book.md"),
+        "models": maybe(directory / "models.yaml"),
+        "idea": maybe(directory / "idea.txt"),
+    }

@@ -20,7 +20,7 @@ from types import ModuleType
 from typing import Any
 
 from sqlalchemy import func
-from sqlmodel import Session, SQLModel, col, create_engine, select
+from sqlmodel import Session, col, create_engine, select
 
 from novelforge.factory import runner as default_runner
 from novelforge.factory.models import (
@@ -45,6 +45,7 @@ from novelforge.factory.models import (
     Settings,
     Topic,
     now,
+    upgrade,
 )
 
 TICK_SECONDS = 3.0
@@ -71,7 +72,7 @@ class Factory:
             f"sqlite:///{self.root / 'factory.sqlite'}",
             connect_args={"check_same_thread": False},
         )
-        SQLModel.metadata.create_all(self.engine)
+        upgrade(self.engine)
         self.lock = threading.RLock()
         self.running = False
         self.jobs: dict[int, Future[None]] = {}
@@ -373,7 +374,10 @@ class Factory:
     def _top_up(self, settings: Settings) -> None:
         with Session(self.engine) as session:
             active = session.exec(
-                select(func.count()).select_from(Book).where(col(Book.stage).not_in(FINISHED))
+                select(func.count())
+                .select_from(Book)
+                .where(col(Book.stage).not_in(FINISHED))
+                .where(col(Book.enqueued).is_(True))
             ).one()
             room = settings.max_total - int(active)
             if room <= 0:
@@ -437,6 +441,7 @@ class Factory:
                 query = (
                     select(Book)
                     .where(Book.stage == stage)
+                    .where(col(Book.enqueued).is_(True))
                     .where(col(Book.id).not_in(list(self.jobs)))
                     .order_by(col(Book.updated_at), col(Book.id))
                 )
@@ -463,13 +468,26 @@ class Factory:
             settings = self.settings()
             if busy == OUTLINING:
                 title = self.runner.outline(
-                    self.root, book.slug, book.idea, book.genre, book.chapters, settings.dry_run
+                    self.root,
+                    book.slug,
+                    book.idea,
+                    book.genre,
+                    book.chapters,
+                    settings.dry_run,
+                    book.keep_canon,
+                    book.keep_outline,
                 )
                 after = OUTLINE_REVIEW if settings.outline_review else TRIAL_QUEUED
-                self._finish(book_id, busy, after, "大纲完成", title=title, written=0)
+                written = self.runner.locked_count(self.root, book.slug) if book.keep_outline else 0
+                self._finish(book_id, busy, after, "大纲完成", title=title, written=written)
                 return
             total = self.runner.card_count(self.root, book.slug)
-            target = min(settings.trial_chapters, total) if busy == TRIAL_WRITING else total
+            cap = book.stop_at if book.stop_at else total
+            if busy == TRIAL_WRITING:
+                trial = book.trial_chapters or settings.trial_chapters
+                target = min(trial, cap, total)
+            else:
+                target = min(cap, total)
             written = self.runner.locked_count(self.root, book.slug)
             while written < target:
                 if not self._keep_going(book_id, busy):
